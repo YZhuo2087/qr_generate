@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Login</title>
+    <style>
+      .hidden {
+        display: none;
+      }
+    </style>
+    <script>
+      function toggleUserType() {
+        const userType = document.querySelector(
+          'input[name="userType"]:checked'
+        ).value;
+        const passwordField = document.getElementById("password-field");
+        const formAction = document.getElementById("login-form");
+        if (userType === "resident") {
+          passwordField.classList.remove("hidden");
+          formAction.action = "resident";
+        } else {
+          passwordField.classList.add("hidden");
+          formAction.action = "visitor";
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <form id="login-form" action="/resident" method="POST">
+      <label for="username">Email:</label>
+      <input type="text" id="email" name="email" required /><br />
+
+      <div id="password-field">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" /><br />
+      </div>
+
+      <label>
+        <input
+          type="radio"
+          name="userType"
+          value="resident"
+          checked
+          onclick="toggleUserType()"
+        />
+        Resident
+      </label>
+      <label>
+        <input
+          type="radio"
+          name="userType"
+          value="visitor"
+          onclick="toggleUserType()"
+        />
+        Visitor </label
+      ><br />
+
+      <div class="btn-container">
+        <button type="submit">Login</button>
+        <button
+          class="continue-as-guest"
+          onclick="window.location.href='/guest'"
+        >
+          Continue as Guest
+        </button>
+      </div>
+    </form>
+  </body>
+</html>

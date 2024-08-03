@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        text-align: left;
+      }
+      th {
+        background-color: #f4f4f4;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Your QR Code (Valid before <%= validity %>)</h1>
+      <div class="qr-code">
+        <img src="<%= qrCodeUrl %>" alt="QR Code" />
+      </div>
+
+      <h1>Visitors Information and Status</h1>
+      <% if (visitors) { %>
+      <table>
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Phone Number</th>
+          <th>Resident Name</th>
+          <th>Room Number</th>
+          <th>Status</th>
+        </tr>
+        <% visitors.forEach(visitor => { %>
+        <tr>
+          <td><%= visitor.id %></td>
+          <td><%= visitor.username %></td>
+          <td><%= visitor.email %></td>
+          <td><%= visitor.phone_number %></td>
+          <td><%= visitor.resident_name %></td>
+          <td><%= visitor.room_number %></td>
+          <td>
+            <button
+              onclick="updateVisitorStatus('<%= visitor.id %>', 'approve')"
+            >
+              Approve
+            </button>
+            <button
+              onclick="updateVisitorStatus('<%= visitor.id %>', 'decline')"
+            >
+              Decline
+            </button>
+          </td>
+        </tr>
+        <% }) %>
+      </table>
+      <% } %>
+    </div>
+  </body>
+  <script>
+    async function updateVisitorStatus(visitorId, status) {
+      alert(visitorId);
+      try {
+        const response = await fetch("/update-visitor-status", {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ visitorId, status }),
+        });
+
+        if (response.ok) {
+          alert("Visitor status updated successfully");
+          location.reload(); // Reload the page to reflect the changes
+        } else {
+          alert("Failed to update visitor status");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("An error occurred while updating visitor status");
+      }
+    }
+  </script>
+</html>
